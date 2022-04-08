@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sampleapp
+  labels:
+    version: v1
+spec:
+  selector:
+    matchLabels:
+      app: sampleapp
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sampleapp
+        version: v1
+    spec:
+      containers:
+      - name: sampleapp
+        image: uk.icr.io/ibm-conibtainer-registry/sampleapp:v1
+        imagePullPolicy: Never
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sampleapp
+spec:
+  type: LoadBalancer
+  ports:
+  - port: 8080
+    name: http
+  selector:
+    app: sampleapp

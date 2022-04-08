@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sampleapp-canary
+  labels:
+    version: canary
+spec:
+  selector:
+    matchLabels:
+      app: sampleapp
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: sampleapp
+        version: canary
+    spec:
+      containers:
+      - name: sampleapp
+        image: uk.icr.io/ibm-conibtainer-registry/sampleapp:canary
+        imagePullPolicy: Never
