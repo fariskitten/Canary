@@ -17,5 +17,5 @@ spec:
     spec:
       containers:
       - name: sampleapp
-        image: uk.icr.io/ibm-conibtainer-registry/sampleapp:canary
+        image: uk.icr.io/ibm-conibtainer-registry/sampleapp:$TAG
         imagePullPolicy: Never

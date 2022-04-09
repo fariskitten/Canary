@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: sampleapp
   labels:
-    version: v1
+    version: prod
 spec:
   selector:
     matchLabels:
@@ -13,11 +13,11 @@ spec:
     metadata:
       labels:
         app: sampleapp
-        version: v1
+        version: prod
     spec:
       containers:
       - name: sampleapp
-        image: uk.icr.io/ibm-conibtainer-registry/sampleapp:v1
+        image: uk.icr.io/ibm-conibtainer-registry/sampleapp:$TAG
         imagePullPolicy: Never
 ---
 apiVersion: v1

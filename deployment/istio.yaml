@@ -49,11 +49,7 @@ spec:
   subsets:
   - name: prod
     labels:
-      app: sampleapp
-      version: v1
-      # pod-template-hash: 7c5fcc56b
+      version: prod
   - name: canary
     labels:
-      # app: sampleapp
       version: canary
-      # pod-template-hash: 66f7b8f6d9
