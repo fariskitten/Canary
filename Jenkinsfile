@@ -18,13 +18,11 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes'){
             }
         }
         stage('Build') {
-            environment {
-                TAG = "$gitSHA"
-            }
+            TAG = "$gitSHA"
             container('docker') {
                 sh 'docker login -u iamapikey -p $REGISTRY_TOKEN uk.icr.io'
-                sh 'docker build -t $IMAGE_REGISTRY/sampleapp:$TAG .'
-                sh 'docker push $IMAGE_REGISTRY/sampleapp:$TAG'
+                sh "docker build -t $IMAGE_REGISTRY/sampleapp:$TAG ."
+                sh "docker push $IMAGE_REGISTRY/sampleapp:$TAG"
             }
         }
         stage('Deploy Canary') {
