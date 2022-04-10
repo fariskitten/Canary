@@ -19,18 +19,17 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes'){
         }
         stage('Build') {
             container('docker') {
-                sh "export TAG=$gitSHA" 
                 sh 'docker login -u iamapikey -p $REGISTRY_TOKEN uk.icr.io'
-                sh 'docker build -t $IMAGE_REGISTRY/sampleapp:$TAG .'
-                sh 'docker push $IMAGE_REGISTRY/sampleapp:$TAG'
+                sh "export TAG=$gitSHA" +  'docker build -t $IMAGE_REGISTRY/sampleapp:$TAG .'
+                sh "export TAG=$gitSHA" +  'docker push $IMAGE_REGISTRY/sampleapp:$TAG'
             }
         }
         stage('Deploy Canary') {
             if ( env.BRANCH_NAME == 'canary' ){
             container('kubectl') {
                 sh 'apk update && apk add gettext'
-                sh "export TAG=$gitSHA envsubst < deployment/canary.yaml | kubectl apply -f -"
-                sh "export PROD_WEIGHT=95 CANARY_WEIGHT=5 envsubst < deployment/istio.yaml | kubectl apply -f -"
+                sh "export TAG=$gitSHA && envsubst < deployment/canary.yaml | kubectl apply -f -"
+                sh "export PROD_WEIGHT=95 CANARY_WEIGHT=5 && envsubst < deployment/istio.yaml | kubectl apply -f -"
             }
         }
         }
@@ -38,8 +37,8 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes'){
             if ( env.BRANCH_NAME == 'master' ) {
             container('kubectl') {
                 sh 'apk update && apk add gettext'
-                sh "export TAG=$gitSHA envsubst < deployment/app.yaml | kubectl apply -f -"
-                sh "export PROD_WEIGHT=100 CANARY_WEIGHT=0 envsubst < deployment/istio.yaml | kubectl apply -f -"
+                sh "export TAG=$gitSHA && envsubst < deployment/app.yaml | kubectl apply -f -"
+                sh "export PROD_WEIGHT=100 CANARY_WEIGHT=0 && envsubst < deployment/istio.yaml | kubectl apply -f -"
             }
         }
     }
