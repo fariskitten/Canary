@@ -25,20 +25,22 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes'){
             }
         }
         stage('Deploy Canary') {
-            if { branch 'canary' }
+            if ( branch 'canary' ){
             container('kubectl') {
                 sh 'apk update && apk add gettext'
                 sh "export TAG=$gitSHA" + 'envsubst < deployment/canary.yaml | kubectl apply -f -'
                 sh "export PROD_WEIGHT=95 CANARY_WEIGHT=5" + 'envsubst < deployment/istio.yaml | kubectl apply -f -'
             }
         }
+        }
         stage('Deploy Production') {
-            if { branch 'master' }
+            if ( branch 'master' ) {
             container('kubectl') {
                 sh 'apk update && apk add gettext'
                 sh "export TAG=$gitSHA" + 'envsubst < deployment/app.yaml | kubectl apply -f -'
                 sh "export PROD_WEIGHT=100 CANARY_WEIGHT=0" + 'envsubst < deployment/istio.yaml | kubectl apply -f -'
             }
         }
+    }
     }
 }
