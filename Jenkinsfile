@@ -28,7 +28,7 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes'){
             if ( env.BRANCH_NAME == 'canary' ){
             container('kubectl') {
                 sh 'apk update && apk add gettext'
-                sh "TAG=$gitSHA envsubst < deployment/canary.yaml | kubectl apply -f -"
+                sh "export TAG=$gitSHA envsubst < deployment/canary.yaml | kubectl apply -f -"
                 sh "PROD_WEIGHT=95 CANARY_WEIGHT=5 envsubst < deployment/istio.yaml | kubectl apply -f -"
                 }
             }  
@@ -37,7 +37,7 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes'){
             if ( env.BRANCH_NAME == 'master' ) {
             container('kubectl') {
                 sh 'apk update && apk add gettext'
-                sh "TAG=$gitSHA envsubst < deployment/app.yaml | kubectl apply -f -"
+                sh "export TAG=$gitSHA envsubst < deployment/app.yaml | kubectl apply -f -"
                 sh "PROD_WEIGHT=100 CANARY_WEIGHT=0 envsubst < deployment/istio.yaml | kubectl apply -f -"
                 }
             }
