@@ -25,7 +25,8 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes'){
             }
         }
         stage('Deploy Canary') {
-            if ( branch 'canary' ){
+            echo env.BRANCH_NAME
+            if ( env.BRANCH_NAME == 'canary' ){
             container('kubectl') {
                 sh 'apk update && apk add gettext'
                 sh "export TAG=$gitSHA" + 'envsubst < deployment/canary.yaml | kubectl apply -f -'
@@ -34,7 +35,7 @@ podTemplate(label: 'jenkins-slave', cloud: 'kubernetes'){
         }
         }
         stage('Deploy Production') {
-            if ( branch 'master' ) {
+            if ( env.BRANCH_NAME == 'master' ) {
             container('kubectl') {
                 sh 'apk update && apk add gettext'
                 sh "export TAG=$gitSHA" + 'envsubst < deployment/app.yaml | kubectl apply -f -'
